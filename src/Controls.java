@@ -3,24 +3,31 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 //Access window
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-
 //Access graphics
 import java.awt.Color;
 import java.awt.Graphics;
+//Access picture creation.
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 //UDP
 import java.io.*;
 import java.net.*;
 
+
 public class Controls extends JPanel implements ActionListener, KeyListener{
+	private BufferedImage image; //Helicopter
 	Timer tm = new Timer(5, this);
 	//Player variables
-	int xPlayer = 0, yPlayer = 400, playerWidth = 50, playerHeight = 50, velX = 0, velY = 0;
+	int xPlayer = 0, yPlayer = 400, playerWidth = 100, playerHeight = 100, velX = 0, velY = 0;
 	//Line from player to goal
 	int playerPointX, playerPointY, goalPointX = 250, goalPointY = 0;
 	//Path. p = path
@@ -38,6 +45,11 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		addKeyListener(this); //Not interfering
 		setFocusable(true);
 		setFocusTraversalKeysEnabled(false); //Wont be using shift, tab.. keys
+		try {                
+	          image = ImageIO.read(new File("src/Spotlight.png"));
+	       } catch (IOException ex) {
+	            // handle exception...
+	       }
 	}
 
 	//////////////////////////////////////////////GAMEPLAY
@@ -62,7 +74,8 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		g.drawLine(playerPointX, playerPointY,goalPointX,goalPointY); //could be used to measure distance from player to goal
 		//Display player
 		g.setColor(Color.BLUE);
-		g.fillRect(xPlayer,yPlayer,playerWidth,playerHeight);
+		//g.fillRect(xPlayer,yPlayer,playerWidth,playerHeight);
+		g.drawImage(image, xPlayer, yPlayer, playerWidth, playerHeight, null);
 	}
 	public void actionPerformed(ActionEvent e){
 		xPlayer = xPlayer + velX;
