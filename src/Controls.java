@@ -29,7 +29,10 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	//Player variables
 	int xPlayer = 0, yPlayer = 400, playerWidth = 100, playerHeight = 100, velX = 0, velY = 0;
 	//Line from player to goal
-	int playerPointX, playerPointY, goalPointX = 250, goalPointY = 0;
+	int playerPointX, playerPointY; //goalPointX = 250, goalPointY = 0;
+	//
+	int goalPointX = (int)(Math.random() * 500); //this gives random value from 0-500.
+	int goalPointY = (int)(Math.random() * 100); //this gives random value from 0-200.
 	//Path. p = path
 	int p1PosX = 50, p1PosY = 250, p1Width = 50, p1Height = 250, p2PosX =50, p2PosY = 250, p2Width = 250, p2Height = 50, p3PosX = 250, p3PosY = 0, p3Width = 50, p3Height = 250;
 	String s = ""; //Make to int? //No value = no sound, 10 highest
@@ -60,15 +63,18 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,500,500);
 		
+		
 		//Display path only visible by key pressed A.
 		g.setColor(Color.BLACK);
 		if(isVisible == true){
 			g.setColor(Color.RED);
 		}
-		g.fillRect(p1PosX, p1PosY, p1Width, p1Height);
-		g.fillRect(p2PosX, p2PosY, p2Width, p2Height);
-		g.fillRect(p3PosX, p3PosY, p3Width, p3Height);
+		//Paths
+		//g.fillRect(p1PosX, p1PosY, p1Width, p1Height);
+		//g.fillRect(p2PosX, p2PosY, p2Width, p2Height);
+		//g.fillRect(p3PosX, p3PosY, p3Width, p3Height);
 		
+		//Line distance to goal
 		playerPointX = xPlayer;
 		playerPointY = yPlayer;
 		g.drawLine(playerPointX, playerPointY,goalPointX,goalPointY); //could be used to measure distance from player to goal
@@ -109,6 +115,18 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		if(c == KeyEvent.VK_ENTER){ ////Moving line down. if wanted to move player up: velX = 0; velY = 1;
 			isVisible = true;
 		}
+		/*
+		if(c == KeyEvent.VK_Q){
+			System.out.println("Two");
+			velX = -1;
+			velY = -1;
+		}
+		if(c == KeyEvent.VK_E){
+			System.out.println("Two");
+			velX = 1;
+			velY = 1;
+		}
+		*/
 	}
 	
 	
@@ -212,7 +230,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		     	s = "111";
 	        }
 	        if(distanceToGoal>450 && distanceToGoal<500){ // && isOnPath == true
-	        	s = "11";
+	        	s = "1";
 	        }
 		//}
 		if(isOnPath = false){
