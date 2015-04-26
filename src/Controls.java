@@ -21,8 +21,7 @@ import javax.imageio.ImageIO;
 //UDP
 import java.io.*;
 import java.net.*;
-
-
+////
 public class Controls extends JPanel implements ActionListener, KeyListener{
 	private BufferedImage shipLeft; //Player
 	private BufferedImage shipRight; //Player
