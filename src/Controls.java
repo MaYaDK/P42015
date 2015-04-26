@@ -15,7 +15,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-
 //UDP
 import java.net.*;
 
@@ -23,27 +22,15 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	private BufferedImage image2; //BackGround
 	
 	public static int screenWidth = 1920, screenHeight = 1080-80;
-	public int newBeaconX, newBeaconY;
 	Timer tm = new Timer(5, this);
 	Screens screen = new Screens();
 	Player p = new Player();
-	
-	public int goalPointX;
-	public int goalPointY;
+	Destination d = new Destination();
 	String s = ""; //No value = no sound, 10 highest
 	String s2 = "";
-	//number of beacons reached
-	public int numberOfBeaconsReached = 0;
 	//
 	double distanceToGoal;
 	boolean isVisible = false;
-	//beacon
-	boolean isBeacon1Reached = false;
-	boolean isBeacon2Reached = false;
-	boolean isBeacon3Reached = false;
-	
-	//Time
-	public int counter = 0;
 	
 	public int xBackground = 0, yBackground = 0, backgroundWidth = screenWidth*6, backgroundHeight = screenWidth*6, velX = 0, velY = 0; //Background
 	
@@ -72,7 +59,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 				g.drawImage(image2, xBackground-600, yBackground-600, backgroundWidth, backgroundHeight, null); //Background
 				//Beacons reached
 				g.setColor(Color.WHITE);
-				g.drawString("Beacon reached: "+ numberOfBeaconsReached, 350, 450);
+				g.drawString("Beacon reached: "+ d.numberOfBeaconsReached, 350, 450);
 				p.drawShip(g);
 				//Display path only visible by key pressed A.
 				if(isVisible == true){
@@ -80,73 +67,30 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 					//Line distance to goal
 					p.playerPointX = p.xPlayer;
 					p.playerPointY = p.yPlayer;
-					g.drawLine(p.playerPointX, p.playerPointY,goalPointX,goalPointY); //could be used to measure distance from player to goal
+					g.drawLine(p.playerPointX, p.playerPointY,d.goalPointX,d.goalPointY); //could be used to measure distance from player to goal
 				}
 			}
 			//If player has reached goal
-			if(goalPointX > p.xPlayer && goalPointX < p.xPlayer+p.playerWidth && goalPointY > p.yPlayer && goalPointY < p.yPlayer+p.playerHeight){
-				checkPlayerAtGoal(); //method which checks which beacons is already reached.	
+			if(d.goalPointX > p.xPlayer && d.goalPointX < p.xPlayer+p.playerWidth && d.goalPointY > p.yPlayer && d.goalPointY < p.yPlayer+p.playerHeight){
+				d.checkPlayerAtGoal(); //method which checks which beacons is already reached.	
 			}
 		}
 		screen.checker(g);
-		
 	}
 	public void actionPerformed(ActionEvent e){
-		counter++;
-		goalPointX = xBackground + 400 + newBeaconX;
-		goalPointY = yBackground + 400 + newBeaconY;
+		d.counter++;
+		d.goalPointX = xBackground + 400 + d.newBeaconX;
+		d.goalPointY = yBackground + 400 + d.newBeaconY;
 		
 		xBackground = xBackground + velX; //xBackground if background should move. xPlayer if player should move
 		yBackground = yBackground + velY; //yBackground if background should move. yPlayer if player should move
 		p.checkPosition();
 		repaint();
 		calculateDistanceTogoal();
-		//if(isGoalReach == false && isBeacon3Reached == true){
 		sendToUDP();
-		//}else
 		sendToDacUDP();
 	}
-	public void checkPlayerAtGoal(){
-		if(screen.isGoalReach == false && isBeacon3Reached == true && isBeacon2Reached == true && isBeacon1Reached == true){
-			//set new position of beacon. 
-			newBeaconX = 100;
-			newBeaconY = 200;
-			
-			screen.isGoalReach = true;
-			System.out.println("GOAL reached");
-			System.out.println("" + counter); //Display time when reached.
-		}
-		if(isBeacon3Reached == false && isBeacon2Reached == true && isBeacon1Reached == true){
-			//set new position of beacon. 
-			newBeaconX = 200;
-			newBeaconY = 200;
-			
-			isBeacon3Reached = true;
-			System.out.println("Beacon three reached");
-			numberOfBeaconsReached +=1;
-			System.out.println("" + counter); //Display time when reached.
-		}
-		if(isBeacon2Reached == false && isBeacon1Reached == true){
-			//set new position of beacon. 
-			newBeaconX = 1000;
-			newBeaconY = 1000;
-			
-			isBeacon2Reached = true;
-			System.out.println("Beacon two reached");
-			numberOfBeaconsReached +=1;
-			System.out.println("" + counter); //Display time when reached.
-		}
-		if(isBeacon1Reached == false){
-			//set new position of beacon. 
-			newBeaconX += 1500;
-			newBeaconY += 100;
-			
-			isBeacon1Reached = true;
-			System.out.println("Beacon one reached");
-			numberOfBeaconsReached +=1;
-			System.out.println("" + counter); //Display time when reached.
-		}
-	}
+	
 	
 	public void keyPressed(KeyEvent e){
 		int c = e.getKeyCode();
@@ -202,8 +146,8 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	public void calculateDistanceTogoal(){
 		//Take current length of line and substitute with prev. 
 		//If longer decrease. else if shorter increase 
-		double x_a = p.playerPointX-goalPointX;
-		double y_a = p.playerPointY-goalPointY;
+		double x_a = p.playerPointX-d.goalPointX;
+		double y_a = p.playerPointY-d.goalPointY;
 		distanceToGoal = Math.sqrt(Math.pow(x_a,2) + Math.pow(y_a,2));
 		//System.out.println(distanceToGoal); //debug
 	}
@@ -218,13 +162,13 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
             sock = new DatagramSocket(); 
             InetAddress host = InetAddress.getByName("localhost");
            
-            if(p.xPlayer> goalPointX){ //player is right to the goal
+            if(p.xPlayer> d.goalPointX){ //player is right to the goal
             	s2 = "1";  //send one byte
             }
-            if(p.xPlayer< goalPointX){ //player is left to the goal
+            if(p.xPlayer< d.goalPointX){ //player is left to the goal
             	s2 = "11";  //send two byte
             }
-            if(goalPointX > p.xPlayer && goalPointX < p.xPlayer+p.playerWidth){ //player equal to goal
+            if(d.goalPointX > p.xPlayer && d.goalPointX < p.xPlayer+p.playerWidth){ //player equal to goal
             	s2 = "111";  //send three byte
             }
             byte[] b = s2.getBytes();
