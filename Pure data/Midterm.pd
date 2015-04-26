@@ -1,0 +1,81 @@
+#N canvas -9 -9 1920 978 10;
+#X declare -lib mrpeach;
+#X floatatom 448 376 3 0 0 0 - - -;
+#X floatatom 475 376 3 0 0 0 - - -;
+#X floatatom 502 376 3 0 0 0 - - -;
+#X floatatom 529 376 3 0 0 0 - - -;
+#X floatatom 556 377 5 0 0 0 - - -;
+#X obj 448 350 unpack 0 0 0 0 0;
+#X floatatom 327 297 9 0 0 0 - - -;
+#X obj 510 324 tgl 15 0 empty empty empty 17 7 0 10 -4034 -1 -1 0 1
+;
+#X floatatom 387 323 9 0 0 0 - - -;
+#X text 24 162 get status on right outlet:;
+#X text 220 297 bytes received:;
+#X text 235 321 total bytes received:;
+#X text 405 375 from:;
+#X text 327 150 Specify a multicast address (from 224.0.0.0 to 239.255.255.255)
+to use multicasting;
+#X text 70 110 Creation arguments: port number to listen on (required)
+;
+#X obj 208 366 spigot;
+#X obj 268 342 tgl 15 0 empty empty enable_print: -77 8 0 10 -4034
+-1 -1 0 1;
+#X obj 208 391 print received;
+#X obj 327 264 route received total from multicast;
+#X text 209 128 IP address to listen on (optional);
+#X text 310 199 change port to listen on;
+#X text 22 75 [udpreceive] receives datagrams over a udp connection
+and outputs them as raw bytes.;
+#X obj 1023 202 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 1013 444 dac~;
+#X obj 1023 340 readsf~;
+#X msg 1023 291 start;
+#X msg 1127 323 stop;
+#X obj 1023 243 t b b;
+#X obj 1099 356 env~;
+#X floatatom 1099 397 5 0 0 0 - - -;
+#X obj 593 313 hsl 128 15 0 7 0 0 empty empty Volume_slider(0-10) -2
+-8 0 10 -232576 -1 -1 0 1;
+#X text 587 263 this should be the volume control. Increase in vol
+when getting closer to object;
+#X floatatom 754 328 5 0 0 0 - - -;
+#X obj 1022 391 *~ 0;
+#X msg 1140 280 open wave.wav;
+#X obj 1173 374 / 5;
+#X msg 209 175 status;
+#X msg 220 214 port 1111;
+#X obj 209 245 udpreceive 1111;
+#X obj 38 449 import mrpeach;
+#X connect 5 0 0 0;
+#X connect 5 1 1 0;
+#X connect 5 2 2 0;
+#X connect 5 3 3 0;
+#X connect 5 4 4 0;
+#X connect 6 0 30 0;
+#X connect 15 0 17 0;
+#X connect 16 0 15 1;
+#X connect 18 0 6 0;
+#X connect 18 1 8 0;
+#X connect 18 2 5 0;
+#X connect 18 3 7 0;
+#X connect 22 0 27 0;
+#X connect 24 0 28 0;
+#X connect 24 0 33 0;
+#X connect 24 1 22 0;
+#X connect 25 0 24 0;
+#X connect 26 0 24 0;
+#X connect 27 0 25 0;
+#X connect 27 1 34 0;
+#X connect 28 0 29 0;
+#X connect 30 0 32 0;
+#X connect 30 0 35 0;
+#X connect 33 0 23 1;
+#X connect 33 0 23 0;
+#X connect 34 0 24 0;
+#X connect 35 0 33 1;
+#X connect 36 0 38 0;
+#X connect 37 0 38 0;
+#X connect 38 0 15 0;
+#X connect 38 1 18 0;
