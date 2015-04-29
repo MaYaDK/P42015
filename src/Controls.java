@@ -41,7 +41,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		setFocusable(true);
 		setFocusTraversalKeysEnabled(false); //Wont be using shift, tab.. keys
 		try {
-	        image2 = ImageIO.read(new File("src/Water.jpg")); //Background
+	        image2 = ImageIO.read(new File("src/water3.jpg")); //Background
 	          
 	    } catch (IOException ex) {
 	            // handle exception...

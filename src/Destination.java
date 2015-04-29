@@ -1,4 +1,4 @@
-
+ 
 public class Destination {
 	public int newBeaconX, newBeaconY;
 	
@@ -14,6 +14,7 @@ public class Destination {
 		//Time
 		public int counter = 0;
 		Screens screen = new Screens();
+		Sound sound = new Sound();
 		
 			
 
@@ -23,6 +24,7 @@ public class Destination {
 	}
 	public void checkPlayerAtGoal(){
 		if(screen.isGoalReach == false && isBeacon3Reached == true && isBeacon2Reached == true && isBeacon1Reached == true){
+			sound.beaconHit();
 			//set new position of beacon. 
 			newBeaconX = 100;
 			newBeaconY = 200;
@@ -32,6 +34,7 @@ public class Destination {
 			System.out.println("" + counter); //Display time when reached.
 		}
 		if(isBeacon3Reached == false && isBeacon2Reached == true && isBeacon1Reached == true){
+			sound.beaconHit();
 			//set new position of beacon. 
 			newBeaconX = 200;
 			newBeaconY = 200;
@@ -42,6 +45,7 @@ public class Destination {
 			System.out.println("" + counter); //Display time when reached.
 		}
 		if(isBeacon2Reached == false && isBeacon1Reached == true){
+			sound.beaconHit();
 			//set new position of beacon. 
 			newBeaconX = 1000;
 			newBeaconY = 1000;
@@ -52,6 +56,7 @@ public class Destination {
 			System.out.println("" + counter); //Display time when reached.
 		}
 		if(isBeacon1Reached == false){
+			sound.beaconHit();
 			//set new position of beacon. 
 			newBeaconX += 1500;
 			newBeaconY += 100;
