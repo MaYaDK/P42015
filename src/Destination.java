@@ -13,6 +13,8 @@ public class Destination {
 		public int numberOfBeaconsReached = 0;
 		//Time
 		public int counter = 0;
+		public int min = 0;
+		public int sec = 0;
 		Screens screen = new Screens();
 		Sound sound = new Sound();
 		
@@ -22,7 +24,20 @@ public class Destination {
 		// TODO Auto-generated method stub
 
 	}
+	public void timer(){
+		if(counter>=100){
+			sec+=1;
+			counter = 0;
+		}
+		if(sec>=60){
+			min+=1;
+			sec = 0;
+		}
+		counter++;
+
+	}
 	public void checkPlayerAtGoal(){
+
 		if(screen.isGoalReach == false && isBeacon3Reached == true && isBeacon2Reached == true && isBeacon1Reached == true){
 			sound.beaconHit();
 			//set new position of beacon. 
@@ -31,7 +46,7 @@ public class Destination {
 			
 			screen.isGoalReach = true;
 			System.out.println("GOAL reached");
-			System.out.println("" + counter); //Display time when reached.
+			System.out.println("Timer:"+ min + ":" + sec + ":" + counter); //Display time when reached.
 		}
 		if(isBeacon3Reached == false && isBeacon2Reached == true && isBeacon1Reached == true){
 			sound.beaconHit();
@@ -42,7 +57,7 @@ public class Destination {
 			isBeacon3Reached = true;
 			System.out.println("Beacon three reached");
 			numberOfBeaconsReached +=1;
-			System.out.println("" + counter); //Display time when reached.
+			System.out.println("Timer:"+ min + ":" + sec + ":" + counter); //Display time when reached.
 		}
 		if(isBeacon2Reached == false && isBeacon1Reached == true){
 			sound.beaconHit();
@@ -53,7 +68,7 @@ public class Destination {
 			isBeacon2Reached = true;
 			System.out.println("Beacon two reached");
 			numberOfBeaconsReached +=1;
-			System.out.println("" + counter); //Display time when reached.
+			System.out.println("Timer:"+ min + ":" + sec + ":" + counter); //Display time when reached.
 		}
 		if(isBeacon1Reached == false){
 			sound.beaconHit();
@@ -64,7 +79,7 @@ public class Destination {
 			isBeacon1Reached = true;
 			System.out.println("Beacon one reached");
 			numberOfBeaconsReached +=1;
-			System.out.println("" + counter); //Display time when reached.
+			System.out.println("Timer:"+ min + ":" + sec + ":" + counter); //Display time when reached.
 		}
 	}
 
