@@ -4,23 +4,35 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+
+
+
 //Access window
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+
+
 
 //Access graphics
 import java.awt.Color;
 import java.awt.Graphics;
 //Access picture creation.
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+
+
+
 //UDP
 import java.net.*;
+import java.nio.ByteBuffer;
 
 public class Controls extends JPanel implements ActionListener, KeyListener{
 	private BufferedImage image2; //BackGround
@@ -32,8 +44,9 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	Destination d = new Destination();
 	String s = ""; //No value = no sound, 10 highest
 	String s2 = "";
+	public int send;
 	//
-	double distanceToGoal;
+	public double distanceToGoal;
 	boolean isVisible = false;
 	
 	public int xBackground = 0, yBackground = 0, backgroundWidth = screenWidth*6, backgroundHeight = screenWidth*6, velX = 0, velY = 0; //Background
@@ -170,7 +183,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
         {
             sock = new DatagramSocket(); 
             InetAddress host = InetAddress.getByName("localhost");
-           
+           /*
             if(p.xPlayer> d.goalPointX){ //player is right to the goal
             	s2 = "1";  //send one byte
             }
@@ -180,9 +193,16 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
             if(d.goalPointX > p.xPlayer && d.goalPointX < p.xPlayer+p.playerWidth){ //player equal to goal
             	s2 = "111";  //send three byte
             }
-            byte[] b = s2.getBytes();
-            DatagramPacket  dp = new DatagramPacket(b , b.length , host , port);
-            sock.send(dp);
+            */
+            //byte[] b = send.getBytes();
+            send = 100;
+            final ByteArrayOutputStream baos=new ByteArrayOutputStream();
+            final DataOutputStream daos=new DataOutputStream(baos);
+            daos.writeInt(send);
+            daos.close();
+            final byte[] bytes=baos.toByteArray();
+            DatagramPacket  dp = new DatagramPacket(bytes , bytes.length, host , port);
+            //sock.send(dp);
         } 
         catch(IOException e)
         {
@@ -227,8 +247,12 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	        	s = "1";
 	        }
 		                
-	        byte[] b = s.getBytes();            
-	         DatagramPacket  dp = new DatagramPacket(b , b.length , host , port);
+	        //byte[] b = distanceToGoal.g
+	        ByteBuffer b = ByteBuffer.allocate(8);
+	        b.putDouble(distanceToGoal);
+	        //.putInt((int) distanceToGoal);
+	        DatagramPacket  dp = new DatagramPacket(b.array() , b.array().length , host , port);
+	         //DatagramPacket  dp = new DatagramPacket(distanceToGoal, b.length , host , port);
 	         sock.send(dp);
        }         
        catch(IOException e)
