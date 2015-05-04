@@ -5,14 +5,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 
-
-
 //Access window
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-
-
 
 
 //Access graphics
@@ -26,8 +22,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-
-
 
 
 //UDP
@@ -44,7 +38,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	Destination d = new Destination();
 	String s = ""; //No value = no sound, 10 highest
 	String s2 = "";
-	//
+	
 	public int distanceToGoal;
 	boolean isVisible = false;
 	
@@ -88,13 +82,24 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 			}
 			//If player has reached goal
 			if(d.goalPointX > p.xPlayer && d.goalPointX < p.xPlayer+p.playerWidth && d.goalPointY > p.yPlayer && d.goalPointY < p.yPlayer+p.playerHeight){
+				if(d.numberOfBeaconsReached == 3){
+					destinationReached();
+				}else
 				d.checkPlayerAtGoal(); //method which checks which beacons is already reached.	
 			}
 		}
 		screen.checker(g);
 	}
+	private void destinationReached() {
+		screen.isGoalReach = true;
+		d.newBeaconX += 1500; //Have to give new pos, so timer only prints one time.
+		d.newBeaconY += 100;
+		System.out.println("GOAL reached");
+		System.out.println("Timer:"+ d.min + ":" + d.sec + ":" + d.counter);
+		
+	}
+
 	public void actionPerformed(ActionEvent e){
-		//d.counter++;
 		if(screen.isGameStarted == true){
 			d.timer();
 			//Debug
@@ -108,9 +113,8 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		p.checkPosition();
 		repaint();
 		calculateDistanceTogoal();
-		sendToUDP();
+		//sendToUDP();
 		sendToDacUDP();
-		sendToDacUDP2();
 	}
 	
 	
@@ -183,38 +187,22 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
             InetAddress host = InetAddress.getByName("localhost");
            
             if(p.xPlayer > d.goalPointX){ //player is right to the goal
+            	if(d.numberOfBeaconsReached >=3){
+        			s2 = "1111";
+            	}else 
             	s2 = "1";  //send one byte
             }
             if(p.xPlayer < d.goalPointX){ //player is left to the goal
+            	if(d.numberOfBeaconsReached >=3){
+            		s2 = "11111";
+            	}else
+            	
             	s2 = "11";  //send two byte
             }
             if(d.goalPointX > p.xPlayer && d.goalPointX < p.xPlayer+p.playerWidth){ //player equal to goal
-            	s2 = "111";  //send three byte
-            }
-            byte[] b = s2.getBytes();
-            DatagramPacket  dp = new DatagramPacket(b , b.length , host , port);
-            sock.send(dp);
-        } 
-        catch(IOException e)
-        {
-            System.err.println("IOException " + e);
-        }
-	}
-	public void sendToDacUDP2(){ //if beacon reach
-		DatagramSocket sock = null;
-        int port = 2222;   
-        try
-        {
-            sock = new DatagramSocket(); 
-            InetAddress host = InetAddress.getByName("localhost");
-           
-            if(p.xPlayer > d.goalPointX){ //player is right to the goal
-            	s2 = "1";  //send one byte
-            }
-            if(p.xPlayer < d.goalPointX){ //player is left to the goal
-            	s2 = "11";  //send two byte
-            }
-            if(d.goalPointX > p.xPlayer && d.goalPointX < p.xPlayer+p.playerWidth){ //player equal to goal
+            	if(d.numberOfBeaconsReached >=3){
+            	s2 = "111111";
+        	}else
             	s2 = "111";  //send three byte
             }
             byte[] b = s2.getBytes();
@@ -229,7 +217,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	public void sendToUDP(){
 		//UDP
 		DatagramSocket sock = null;
-        int port = 3333;
+        int port = 5555;
 		         
        try
        {

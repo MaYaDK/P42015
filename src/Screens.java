@@ -83,12 +83,9 @@ public class Screens {
 	}
 	if(isGoalReach == true){
 		g.drawImage(end, 0, 0, screenWidth, screenHeight, null); //Player
-	}
+		}
 	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
-
 }

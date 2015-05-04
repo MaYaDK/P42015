@@ -6,22 +6,19 @@ public class Destination {
 	public int goalPointY;
 	
 	//beacon
-		boolean isBeacon1Reached = false;
-		boolean isBeacon2Reached = false;
-		boolean isBeacon3Reached = false;
+	boolean isBeacon1Reached = false;
+	boolean isBeacon2Reached = false;
+	boolean isBeacon3Reached = false;
 		//number of beacons reached
-		public int numberOfBeaconsReached = 0;
+	public int numberOfBeaconsReached = 0;
 		//Time
-		public int counter = 0;
-		public int min = 0;
-		public int sec = 0;
-		Screens screen = new Screens();
-		Sound sound = new Sound();
+	public int counter = 0;
+	public int min = 0;
+	public int sec = 0;
+	Screens screen = new Screens();
+	Sound sound = new Sound();
 		
-			
-
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 	}
 	public void timer(){
@@ -34,20 +31,9 @@ public class Destination {
 			sec = 0;
 		}
 		counter++;
-
 	}
+	
 	public void checkPlayerAtGoal(){
-
-		if(screen.isGoalReach == false && isBeacon3Reached == true && isBeacon2Reached == true && isBeacon1Reached == true){
-			sound.beaconHit();
-			//set new position of beacon. 
-			//newBeaconX = 100;
-			//newBeaconY = 200;
-			
-			screen.isGoalReach = true;
-			System.out.println("GOAL reached");
-			System.out.println("Timer:"+ min + ":" + sec + ":" + counter); //Display time when reached.
-		}
 		if(isBeacon3Reached == false && isBeacon2Reached == true && isBeacon1Reached == true){
 			sound.beaconHit();
 			//set new position of beacon. 
@@ -82,5 +68,4 @@ public class Destination {
 			System.out.println("Timer:"+ min + ":" + sec + ":" + counter); //Display time when reached.
 		}
 	}
-
 }
