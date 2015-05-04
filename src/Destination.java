@@ -41,8 +41,8 @@ public class Destination {
 		if(screen.isGoalReach == false && isBeacon3Reached == true && isBeacon2Reached == true && isBeacon1Reached == true){
 			sound.beaconHit();
 			//set new position of beacon. 
-			newBeaconX = 100;
-			newBeaconY = 200;
+			//newBeaconX = 100;
+			//newBeaconY = 200;
 			
 			screen.isGoalReach = true;
 			System.out.println("GOAL reached");

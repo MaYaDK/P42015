@@ -44,9 +44,8 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	Destination d = new Destination();
 	String s = ""; //No value = no sound, 10 highest
 	String s2 = "";
-	public int send;
 	//
-	public double distanceToGoal;
+	public int distanceToGoal;
 	boolean isVisible = false;
 	
 	public int xBackground = 0, yBackground = 0, backgroundWidth = screenWidth*6, backgroundHeight = screenWidth*6, velX = 0, velY = 0; //Background
@@ -58,7 +57,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		setFocusable(true);
 		setFocusTraversalKeysEnabled(false); //Wont be using shift, tab.. keys
 		try {
-	        image2 = ImageIO.read(new File("src/water.jpg")); //Background
+	        image2 = ImageIO.read(new File("src/WaterThirdVersion.jpg")); //Background
 	          
 	    } catch (IOException ex) {
 	            // handle exception...
@@ -111,6 +110,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		calculateDistanceTogoal();
 		sendToUDP();
 		sendToDacUDP();
+		sendToDacUDP2();
 	}
 	
 	
@@ -168,53 +168,68 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	public void calculateDistanceTogoal(){
 		//Take current length of line and substitute with prev. 
 		//If longer decrease. else if shorter increase 
-		double x_a = p.playerPointX-d.goalPointX;
-		double y_a = p.playerPointY-d.goalPointY;
-		distanceToGoal = Math.sqrt(Math.pow(x_a,2) + Math.pow(y_a,2));
+		int x_a = p.playerPointX-d.goalPointX;
+		int y_a = p.playerPointY-d.goalPointY;
+		distanceToGoal = (int) Math.sqrt(Math.pow(x_a,2) + Math.pow(y_a,2));
 		//System.out.println(distanceToGoal); //debug
 	}
 	
 	public void sendToDacUDP(){
-		
 		DatagramSocket sock = null;
-        int port = 2222;
-         
+        int port = 3333;   
         try
         {
             sock = new DatagramSocket(); 
             InetAddress host = InetAddress.getByName("localhost");
-           /*
-            if(p.xPlayer> d.goalPointX){ //player is right to the goal
+           
+            if(p.xPlayer > d.goalPointX){ //player is right to the goal
             	s2 = "1";  //send one byte
             }
-            if(p.xPlayer< d.goalPointX){ //player is left to the goal
+            if(p.xPlayer < d.goalPointX){ //player is left to the goal
             	s2 = "11";  //send two byte
             }
             if(d.goalPointX > p.xPlayer && d.goalPointX < p.xPlayer+p.playerWidth){ //player equal to goal
             	s2 = "111";  //send three byte
             }
-            */
-            //byte[] b = send.getBytes();
-            send = 100;
-            final ByteArrayOutputStream baos=new ByteArrayOutputStream();
-            final DataOutputStream daos=new DataOutputStream(baos);
-            daos.writeInt(send);
-            daos.close();
-            final byte[] bytes=baos.toByteArray();
-            DatagramPacket  dp = new DatagramPacket(bytes , bytes.length, host , port);
-            //sock.send(dp);
+            byte[] b = s2.getBytes();
+            DatagramPacket  dp = new DatagramPacket(b , b.length , host , port);
+            sock.send(dp);
         } 
         catch(IOException e)
         {
             System.err.println("IOException " + e);
         }
 	}
-	
+	public void sendToDacUDP2(){ //if beacon reach
+		DatagramSocket sock = null;
+        int port = 2222;   
+        try
+        {
+            sock = new DatagramSocket(); 
+            InetAddress host = InetAddress.getByName("localhost");
+           
+            if(p.xPlayer > d.goalPointX){ //player is right to the goal
+            	s2 = "1";  //send one byte
+            }
+            if(p.xPlayer < d.goalPointX){ //player is left to the goal
+            	s2 = "11";  //send two byte
+            }
+            if(d.goalPointX > p.xPlayer && d.goalPointX < p.xPlayer+p.playerWidth){ //player equal to goal
+            	s2 = "111";  //send three byte
+            }
+            byte[] b = s2.getBytes();
+            DatagramPacket  dp = new DatagramPacket(b , b.length , host , port);
+            sock.send(dp);
+        } 
+        catch(IOException e)
+        {
+            System.err.println("IOException " + e);
+        }
+	}
 	public void sendToUDP(){
-		//System.out.println(""+ distanceToGoal);
 		//UDP
 		DatagramSocket sock = null;
-        int port = 1111;
+        int port = 3333;
 		         
        try
        {
@@ -222,6 +237,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
     	   InetAddress host = InetAddress.getByName("localhost");
 		           
 		//make one for each distance interface. if distance>100 = all 10 cifre. if distance>90 = 9 cifre, if distance>80 = 8 cifre, if distance>70, if distance>60....
+    	  /*
     	   if(distanceToGoal>50 && distanceToGoal <100){
     	   		s = "11111111";
     	   }
@@ -246,14 +262,16 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	        if(distanceToGoal>450 && distanceToGoal <500){
 	        	s = "1";
 	        }
+	        */
 		                
 	        //byte[] b = distanceToGoal.g
-	        ByteBuffer b = ByteBuffer.allocate(8);
-	        b.putDouble(distanceToGoal);
-	        //.putInt((int) distanceToGoal);
-	        DatagramPacket  dp = new DatagramPacket(b.array() , b.array().length , host , port);
-	         //DatagramPacket  dp = new DatagramPacket(distanceToGoal, b.length , host , port);
-	         sock.send(dp);
+	        ByteBuffer i = ByteBuffer.allocate(8);
+	        //b.putDouble(distanceToGoal);
+	        i.putInt(distanceToGoal);
+	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
+	        //DatagramPacket  dp = new DatagramPacket(distanceToGoal, b.length , host , port);
+	        sock.send(dp);
+	        //System.out.println(i.array());
        }         
        catch(IOException e)
        {
