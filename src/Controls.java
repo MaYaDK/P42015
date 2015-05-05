@@ -38,8 +38,9 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	Destination d = new Destination();
 	String s = ""; //No value = no sound, 10 highest
 	String s2 = "";
+	public double intensity;
 	
-	public int distanceToGoal;
+	public double distanceToGoal;
 	boolean isVisible = false;
 	
 	public int xBackground = 0, yBackground = 0, backgroundWidth = screenWidth*6, backgroundHeight = screenWidth*6, velX = 0, velY = 0; //Background
@@ -113,6 +114,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		p.checkPosition();
 		repaint();
 		calculateDistanceTogoal();
+		calculateIntensity();
 		sendToUDP();
 		sendToDacUDP();
 	}
@@ -172,10 +174,14 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	public void calculateDistanceTogoal(){
 		//Take current length of line and substitute with prev. 
 		//If longer decrease. else if shorter increase 
-		int x_a = p.playerPointX-d.goalPointX;
-		int y_a = p.playerPointY-d.goalPointY;
-		distanceToGoal = (int) Math.sqrt(Math.pow(x_a,2) + Math.pow(y_a,2));
+		double x_a = p.playerPointX-d.goalPointX;
+		double y_a = p.playerPointY-d.goalPointY;
+		distanceToGoal = Math.sqrt(Math.pow(x_a,2) + Math.pow(y_a,2));
 		//System.out.println(distanceToGoal); //debug
+	}
+	public void calculateIntensity(){
+		intensity = 1/Math.pow(distanceToGoal,2);
+		System.out.println(""+intensity);
 	}
 	
 	public void sendToDacUDP(){
@@ -255,7 +261,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	        //byte[] b = distanceToGoal.g
 	        ByteBuffer i = ByteBuffer.allocate(8);
 	        //b.putDouble(distanceToGoal);
-	        i.putInt(distanceToGoal);
+	        i.putInt((int) distanceToGoal);
 	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
 	        //DatagramPacket  dp = new DatagramPacket(distanceToGoal, b.length , host , port);
 	        sock.send(dp);
