@@ -113,7 +113,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		p.checkPosition();
 		repaint();
 		calculateDistanceTogoal();
-		//sendToUDP();
+		sendToUDP();
 		sendToDacUDP();
 	}
 	
@@ -217,7 +217,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	public void sendToUDP(){
 		//UDP
 		DatagramSocket sock = null;
-        int port = 5555;
+        int port = 1111;
 		         
        try
        {
@@ -225,7 +225,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
     	   InetAddress host = InetAddress.getByName("localhost");
 		           
 		//make one for each distance interface. if distance>100 = all 10 cifre. if distance>90 = 9 cifre, if distance>80 = 8 cifre, if distance>70, if distance>60....
-    	  /*
+    	  
     	   if(distanceToGoal>50 && distanceToGoal <100){
     	   		s = "11111111";
     	   }
@@ -250,7 +250,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	        if(distanceToGoal>450 && distanceToGoal <500){
 	        	s = "1";
 	        }
-	        */
+	        
 		                
 	        //byte[] b = distanceToGoal.g
 	        ByteBuffer i = ByteBuffer.allocate(8);
