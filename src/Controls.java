@@ -77,8 +77,11 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 				p.playerPointY = p.yPlayer+p.playerHeight/2;
 				//Display path only visible by key pressed A.
 				if(isVisible == true){
-					g.setColor(Color.RED);
+					//Line to calculate the angle. Always pointing upwards.
+					g.setColor(Color.GREEN);
+					g.drawLine(p.playerPointX, p.playerPointY, p.playerPointX, p.playerPointY-1000);
 					//Line distance to goal
+					g.setColor(Color.RED);
 					g.drawLine(p.playerPointX, p.playerPointY,d.goalPointX,d.goalPointY); //could be used to measure distance from player to goal
 				}
 			}
@@ -232,41 +235,9 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
     	   sock = new DatagramSocket();           
     	   InetAddress host = InetAddress.getByName("localhost");
 		           
-		//make one for each distance interface. if distance>100 = all 10 cifre. if distance>90 = 9 cifre, if distance>80 = 8 cifre, if distance>70, if distance>60....
-    	  /*
-    	   if(distanceToGoal>50 && distanceToGoal <100){
-    	   		s = "11111111";
-    	   }
-	       if(distanceToGoal>100 && distanceToGoal <150){
-	        	s = "1111111";
-	        }
-	        if(distanceToGoal>150 && distanceToGoal <200){
-		        s = "111111";
-	        }
-	        if(distanceToGoal>250 && distanceToGoal <300){
-	        	s = "11111";
-	        }
-	        if(distanceToGoal>300 && distanceToGoal <350){
-	        	s = "1111";
-	        }
-	       if(distanceToGoal>350 && distanceToGoal <400){
-		       	s = "111";
-	        }
-	       if(distanceToGoal>400 && distanceToGoal <450){
-		     	s = "11";
-	        }
-	        if(distanceToGoal>450 && distanceToGoal <500){
-	        	s = "1";
-	        }
-	        
-	        */
-		                
-	        //byte[] b = distanceToGoal.g
+		
 	        ByteBuffer i = ByteBuffer.allocate((int)distanceToGoal);
-	        //b.putDouble(distanceToGoal);
-	        //i.putFloat((float) );
 	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
-	        //DatagramPacket  dp = new DatagramPacket(distanceToGoal, b.length , host , port);
 	        sock.send(dp);
 	        System.out.println((int) distanceToGoal);
        }         
