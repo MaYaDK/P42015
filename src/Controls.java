@@ -72,12 +72,13 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 				g.setColor(Color.WHITE);
 				g.drawString("Beacon reached: "+ d.numberOfBeaconsReached, 350, 450);
 				p.drawShip(g);
+				//Position the line and calculation point to the middle of the ship/player.
+				p.playerPointX = p.xPlayer+p.playerWidth/2;
+				p.playerPointY = p.yPlayer+p.playerHeight/2;
 				//Display path only visible by key pressed A.
 				if(isVisible == true){
 					g.setColor(Color.RED);
 					//Line distance to goal
-					p.playerPointX = p.xPlayer;
-					p.playerPointY = p.yPlayer;
 					g.drawLine(p.playerPointX, p.playerPointY,d.goalPointX,d.goalPointY); //could be used to measure distance from player to goal
 				}
 			}
@@ -117,6 +118,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		calculateIntensity();
 		sendToUDP();
 		sendToDacUDP();
+		//System.out.println(""+distanceToGoal);
 	}
 	
 	
@@ -181,7 +183,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	}
 	public void calculateIntensity(){
 		intensity = 1/Math.pow(distanceToGoal,2);
-		System.out.println(""+intensity);
+		//System.out.println(""+intensity);
 	}
 	
 	public void sendToDacUDP(){
@@ -231,7 +233,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
     	   InetAddress host = InetAddress.getByName("localhost");
 		           
 		//make one for each distance interface. if distance>100 = all 10 cifre. if distance>90 = 9 cifre, if distance>80 = 8 cifre, if distance>70, if distance>60....
-    	  
+    	  /*
     	   if(distanceToGoal>50 && distanceToGoal <100){
     	   		s = "11111111";
     	   }
@@ -257,15 +259,16 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	        	s = "1";
 	        }
 	        
+	        */
 		                
 	        //byte[] b = distanceToGoal.g
-	        ByteBuffer i = ByteBuffer.allocate(8);
+	        ByteBuffer i = ByteBuffer.allocate((int)distanceToGoal);
 	        //b.putDouble(distanceToGoal);
-	        i.putInt((int) distanceToGoal);
+	        //i.putFloat((float) );
 	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
 	        //DatagramPacket  dp = new DatagramPacket(distanceToGoal, b.length , host , port);
 	        sock.send(dp);
-	        //System.out.println(i.array());
+	        System.out.println((int) distanceToGoal);
        }         
        catch(IOException e)
        {

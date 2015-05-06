@@ -36,7 +36,7 @@ and outputs them as raw bytes.;
 #X obj 1099 356 env~;
 #X floatatom 1099 397 5 0 0 0 - - -;
 #X obj 593 313 hsl 128 15 0 7 0 0 empty empty Volume_slider(0-10) -2
--8 0 10 -232576 -1 -1 0 1;
+-8 0 10 -232576 -1 -1 12700 1;
 #X text 587 263 this should be the volume control. Increase in vol
 when getting closer to object;
 #X floatatom 754 328 5 0 0 0 - - -;
