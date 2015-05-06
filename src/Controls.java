@@ -70,7 +70,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 				g.drawImage(image2, xBackground-600, yBackground-600, backgroundWidth, backgroundHeight, null); //Background
 				//Beacons reached
 				g.setColor(Color.WHITE);
-				g.drawString("Beacon reached: "+ d.numberOfBeaconsReached, 350, 450);
 				p.drawShip(g);
 				//Position the line and calculation point to the middle of the ship/player.
 				p.playerPointX = p.xPlayer+p.playerWidth/2;
@@ -235,7 +234,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
     	   sock = new DatagramSocket();           
     	   InetAddress host = InetAddress.getByName("localhost");
 		           
-		
 	        ByteBuffer i = ByteBuffer.allocate((int)distanceToGoal);
 	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
 	        sock.send(dp);
