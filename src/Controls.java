@@ -41,6 +41,10 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	public double intensity;
 	
 	public double distanceToGoal;
+	public double bLength;
+	public double cLength;
+	public double aLength;
+	public double angle;
 	boolean isVisible = false;
 	
 	public int xBackground = 0, yBackground = 0, backgroundWidth = screenWidth*6, backgroundHeight = screenWidth*6, velX = 0, velY = 0; //Background
@@ -77,9 +81,13 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 				//Display path only visible by key pressed A.
 				if(isVisible == true){
 					//Line to calculate the angle. Always pointing upwards.
+					//cLine
 					g.setColor(Color.GREEN);
-					g.drawLine(p.playerPointX, p.playerPointY, p.playerPointX, p.playerPointY-1000);
-					//Line distance to goal
+					g.drawLine(p.playerPointX, p.playerPointY, p.playerPointX, p.playerPointY-400);
+					//aLine
+					g.setColor(Color.BLUE);
+					g.drawLine(d.goalPointX, d.goalPointY,p.playerPointX, p.playerPointY-400);
+					//bLine/Line distance to goal/
 					g.setColor(Color.RED);
 					g.drawLine(p.playerPointX, p.playerPointY,d.goalPointX,d.goalPointY); //could be used to measure distance from player to goal
 				}
@@ -118,6 +126,9 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		repaint();
 		calculateDistanceTogoal();
 		calculateIntensity();
+		calcuteA();
+		calcuteC();
+		calculateAngle();
 		sendToUDP();
 		sendToDacUDP();
 		//System.out.println(""+distanceToGoal);
@@ -178,14 +189,32 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	public void calculateDistanceTogoal(){
 		//Take current length of line and substitute with prev. 
 		//If longer decrease. else if shorter increase 
-		double x_a = p.playerPointX-d.goalPointX;
-		double y_a = p.playerPointY-d.goalPointY;
-		distanceToGoal = Math.sqrt(Math.pow(x_a,2) + Math.pow(y_a,2));
+		double x_b = p.playerPointX-d.goalPointX;
+		double y_b = p.playerPointY-d.goalPointY;
+		distanceToGoal = Math.sqrt(Math.pow(x_b,2) + Math.pow(y_b,2));
+		bLength = distanceToGoal;
 		//System.out.println(distanceToGoal); //debug
+	}
+	public void calcuteC(){
+		//p.playerPointX, p.playerPointY, p.playerPointX, p.playerPointY-1000)
+		double x_c = p.playerPointX-p.playerPointX;
+		double y_c = p.playerPointY-p.playerPointY-400;
+		cLength = Math.sqrt(Math.pow(x_c,2) + Math.pow(y_c,2));
+	}
+	
+	public void calcuteA(){
+		double x_a = p.playerPointX-d.goalPointX;
+		double y_a = (p.playerPointY-400)-d.goalPointY;
+		aLength = Math.sqrt(Math.pow(x_a,2) + Math.pow(y_a,2));
 	}
 	public void calculateIntensity(){
 		intensity = 1/Math.pow(distanceToGoal,2);
 		//System.out.println(""+intensity);
+	}
+	public void calculateAngle(){
+		double degree = Math.acos(angle)*(180/Math.PI);
+		angle = ((Math.pow(bLength,2) + Math.pow(cLength,2)-Math.pow(aLength,2))/(2*bLength*cLength));
+		System.out.println(""+degree);
 	}
 	
 	public void sendToDacUDP(){
