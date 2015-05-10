@@ -45,6 +45,8 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	public double cLength;
 	public double aLength;
 	public double angle;
+	public double degree;
+	public double dB;
 	boolean isVisible = false;
 	
 	public int xBackground = 0, yBackground = 0, backgroundWidth = screenWidth*6, backgroundHeight = screenWidth*6, velX = 0, velY = 0; //Background
@@ -129,8 +131,10 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		calcuteA();
 		calcuteC();
 		calculateAngle();
+		calculateDB();
 		sendToUDP();
 		sendToDacUDP();
+		sendToUDP_degree();
 		//System.out.println(""+distanceToGoal);
 	}
 	
@@ -212,9 +216,22 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		//System.out.println(""+intensity);
 	}
 	public void calculateAngle(){
-		double degree = Math.acos(angle)*(180/Math.PI);
+		degree = Math.acos(angle)*(180/Math.PI);
 		angle = ((Math.pow(bLength,2) + Math.pow(cLength,2)-Math.pow(aLength,2))/(2*bLength*cLength));
-		System.out.println(""+degree);
+		//System.out.println("Degree"+degree);
+	}
+	public void calculateDB(){
+		
+		if(degree>90){
+			degree = (degree-180)*-1;
+		}
+		if(p.playerPointX > d.goalPointX){ //player is right to the goal playerPointX, playerPointY
+			degree = (degree)*-1;
+		}
+		//degree = (degree+90)/180;
+		degree = degree+90; //This gave the angle value from 0 to 1.
+		
+		//System.out.println(degree);
 	}
 	
 	public void sendToDacUDP(){
@@ -256,17 +273,35 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	public void sendToUDP(){
 		//UDP
 		DatagramSocket sock = null;
-        int port = 1111;
-		         
-       try
-       {
+		int port = 1111;         
+		try
+        {
     	   sock = new DatagramSocket();           
     	   InetAddress host = InetAddress.getByName("localhost");
 		           
 	        ByteBuffer i = ByteBuffer.allocate((int)distanceToGoal);
 	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
 	        sock.send(dp);
-	        System.out.println((int) distanceToGoal);
+	        //System.out.println((int) distanceToGoal);
+       }         
+       catch(IOException e)
+       {
+    	   System.err.println("IOException " + e);
+       }
+	}
+	public void sendToUDP_degree(){
+		//UDP
+		DatagramSocket sock = null;
+		int port = 2222;         
+		try
+        {
+    	   sock = new DatagramSocket();           
+    	   InetAddress host = InetAddress.getByName("localhost");
+		           
+	        ByteBuffer i = ByteBuffer.allocate((int)degree);
+	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
+	        sock.send(dp);
+	        //System.out.println((int) distanceToGoal);
        }         
        catch(IOException e)
        {
