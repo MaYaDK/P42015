@@ -126,10 +126,9 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		calcuteC();
 		calculateAngle();
 		calculateDB();
-		//sendToUDP();
+		sendToUDP();
 		sendToDacUDP();
 		sendToUDP_degree();
-		//System.out.println(""+distanceToGoal);
 	}
 	
 	
@@ -208,35 +207,22 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	public void calculateIntensity(){
 		double i = 70;
 		
-		if(d.numberOfBeaconsReached ==0){
+		if(d.numberOfBeaconsReached == 0){
 			distanceBetweenPoints= 62.7;
-		}else if(d.numberOfBeaconsReached ==1){
+		}else if(d.numberOfBeaconsReached == 1){
 			distanceBetweenPoints= 188;
-		}else if(d.numberOfBeaconsReached ==2){
+		}else if(d.numberOfBeaconsReached == 2){
 			distanceBetweenPoints= 131.4;
-		}else if(d.numberOfBeaconsReached ==3){
+		}else if(d.numberOfBeaconsReached == 3){
 			distanceBetweenPoints= 140;
 		}
-		inversDistanceToGoal = distanceBetweenPoints-(distanceToGoal/8);
-		intensity = (i*Math.pow(inversDistanceToGoal,2))/(Math.pow(distanceBetweenPoints,2));
+		
+		if(distanceToGoal/8>distanceBetweenPoints+8.1){
+			intensity = 0;
+		}else 
+			inversDistanceToGoal = distanceBetweenPoints-(distanceToGoal/8);
+		intensity = (i*Math.pow(inversDistanceToGoal,2))/(Math.pow(distanceBetweenPoints,2));	
 		System.out.println(intensity);
-		
-		//intensity = (i*4*Math.PI*Math.pow(distanceBetweenPoints,2))/(4*Math.PI*Math.pow(distanceToGoal/8,2));
-		
-		
-		//intensity = 1/Math.pow(distanceToGoal,2);
-		//System.out.println(""+intensity);
-		//intensity = (70*Math.pow(distanceToGoal/8, 2))/Math.pow(283, 2);
-		
-		
-		//= P/(4*pi*d^2)
-				//double p = 10000;
-		//intensity = p/(4*Math.PI*(Math.pow((distanceToGoal-50)/8,2)));
-		//System.out.println(distanceToGoal);
-		//System.out.println("dB"+ intensity);
-		
-		
-		
 	}
 
 	public void calculateAngle(){
@@ -294,7 +280,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
             System.err.println("IOException " + e);
         }
 	}
-	/*
+	
 	public void sendToUDP(){
 		//UDP
 		DatagramSocket sock = null;
@@ -304,7 +290,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
     	   sock = new DatagramSocket();           
     	   InetAddress host = InetAddress.getByName("localhost");
 		           
-	        ByteBuffer i = ByteBuffer.allocate((int)distanceToGoal);
+	        ByteBuffer i = ByteBuffer.allocate((int)intensity);
 	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
 	        sock.send(dp);
 	        //System.out.println((int) distanceToGoal);
@@ -314,7 +300,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
     	   System.err.println("IOException " + e);
        }
 	}
-	*/
+	
 	
 	public void sendToUDP_degree(){
 		//UDP
