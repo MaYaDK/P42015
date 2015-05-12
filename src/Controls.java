@@ -95,7 +95,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 				}
 			}
 			//If player has reached goal
-			if(d.goalPointX > p.xPlayer && d.goalPointX < p.xPlayer+p.playerWidth && d.goalPointY > p.yPlayer && d.goalPointY < p.yPlayer+p.playerHeight){
+			if(d.goalPointX > p.xPlayer+p.playerWidth/2 && d.goalPointX < p.xPlayer+p.playerWidth/2+100 && d.goalPointY > p.yPlayer+p.playerHeight/2 && d.goalPointY < p.yPlayer+p.playerHeight/2+100){
 				if(d.numberOfBeaconsReached == 3){
 					destinationReached();
 				}else
@@ -132,7 +132,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		calcuteC();
 		calculateAngle();
 		calculateDB();
-		sendToUDP();
+		//sendToUDP();
 		sendToDacUDP();
 		sendToUDP_degree();
 		//System.out.println(""+distanceToGoal);
@@ -212,9 +212,18 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		aLength = Math.sqrt(Math.pow(x_a,2) + Math.pow(y_a,2));
 	}
 	public void calculateIntensity(){
-		intensity = 1/Math.pow(distanceToGoal,2);
+		//intensity = 1/Math.pow(distanceToGoal,2);
 		//System.out.println(""+intensity);
+		//intensity = (70*Math.pow(distanceToGoal/8, 2))/Math.pow(283, 2);
+		
+		
+		//= P/(4*pi*d^2)
+				double p = 10000;
+		intensity = p/(4*Math.PI*(Math.pow((distanceToGoal-50)/8,2)));
+		//System.out.println(distanceToGoal);
+		//System.out.println("dB"+ intensity);
 	}
+
 	public void calculateAngle(){
 		degree = Math.acos(angle)*(180/Math.PI);
 		angle = ((Math.pow(bLength,2) + Math.pow(cLength,2)-Math.pow(aLength,2))/(2*bLength*cLength));
@@ -233,7 +242,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		
 		//System.out.println(degree);
 	}
-	
 	public void sendToDacUDP(){
 		DatagramSocket sock = null;
         int port = 3333;   
@@ -264,12 +272,14 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
             byte[] b = s2.getBytes();
             DatagramPacket  dp = new DatagramPacket(b , b.length , host , port);
             sock.send(dp);
+            sock.close();
         } 
         catch(IOException e)
         {
             System.err.println("IOException " + e);
         }
 	}
+	/*
 	public void sendToUDP(){
 		//UDP
 		DatagramSocket sock = null;
@@ -289,25 +299,27 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
     	   System.err.println("IOException " + e);
        }
 	}
+	*/
+	
 	public void sendToUDP_degree(){
 		//UDP
-		DatagramSocket sock = null;
 		int port = 2222;         
 		try
         {
-    	   sock = new DatagramSocket();           
-    	   InetAddress host = InetAddress.getByName("localhost");
-		           
+			DatagramSocket socket = new DatagramSocket();           
+    	   InetAddress host = InetAddress.getByName("localhost");      
 	        ByteBuffer i = ByteBuffer.allocate((int)degree);
 	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
-	        sock.send(dp);
-	        //System.out.println((int) distanceToGoal);
+	        socket.send(dp);
+	        socket.close();
+	       // System.out.println((int) distanceToGoal);
        }         
        catch(IOException e)
        {
     	   System.err.println("IOException " + e);
        }
 	}
+	
 	public void keyTyped(KeyEvent e){}
 	public void keyReleased(KeyEvent e){
 		//Stops the player movement when key released.
