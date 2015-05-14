@@ -238,7 +238,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		if(degree>90){
 			degree = (degree-180)*-1;
 		}
-		if(p.playerPointX > d.goalPointX){ //player is right to the goal playerPointX, playerPointY
+		if(p.xPlayer+p.playerWidth/2 > d.goalPointX){ //player is right to the goal playerPointX, playerPointY
 			degree = (degree)*-1;
 		}
 		//degree = (degree+90)/180;
