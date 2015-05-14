@@ -43,7 +43,7 @@ public class Destination {
 			isBeacon3Reached = true;
 			System.out.println("Beacon three reached");
 			numberOfBeaconsReached +=1;
-			System.out.println("Timer:"+ min + ":" + sec + ":" + counter); //Display time when reached.
+			System.out.println(min + ":" + sec + ":" + counter); //Display time when reached.
 		}
 		if(isBeacon2Reached == false && isBeacon1Reached == true){
 			sound.beaconHit();
@@ -54,7 +54,7 @@ public class Destination {
 			isBeacon2Reached = true;
 			System.out.println("Beacon two reached");
 			numberOfBeaconsReached +=1;
-			System.out.println("Timer:"+ min + ":" + sec + ":" + counter); //Display time when reached.
+			System.out.println(min + ":" + sec + ":" + counter); //Display time when reached.
 		}
 		if(isBeacon1Reached == false){
 			sound.beaconHit();
@@ -65,7 +65,7 @@ public class Destination {
 			isBeacon1Reached = true;
 			System.out.println("Beacon one reached");
 			numberOfBeaconsReached +=1;
-			System.out.println("Timer:"+ min + ":" + sec + ":" + counter); //Display time when reached.
+			System.out.println(min + ":" + sec + ":" + counter); //Display time when reached.
 		}
 	}
 }

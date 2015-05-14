@@ -89,7 +89,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 			}
 			//If player has reached goal
 			if(d.goalPointX > p.playerPointX-50 && d.goalPointX < p.playerPointX+50 && d.goalPointY > p.playerPointY-50 && d.goalPointY < p.yPlayer+p.playerPointY+50){
-				System.out.println(distanceToGoal/8);
+				//System.out.println(distanceToGoal/8);
 				if(d.numberOfBeaconsReached == 3){
 					destinationReached();
 				}else
@@ -103,7 +103,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		d.newBeaconX += 1500; //Have to give new pos, so timer only prints one time.
 		d.newBeaconY += 100;
 		System.out.println("GOAL reached");
-		System.out.println("Timer:"+ d.min + ":" + d.sec + ":" + d.counter);
+		System.out.println(d.min + ":" + d.sec + ":" + d.counter);
 		
 	}
 
@@ -212,17 +212,20 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		}else if(d.numberOfBeaconsReached == 1){
 			distanceBetweenPoints= 188;
 		}else if(d.numberOfBeaconsReached == 2){
-			distanceBetweenPoints= 131.4;
+			//System.out.println(distanceToGoal/8);
+			distanceBetweenPoints= 131.4; //FIX THIS
 		}else if(d.numberOfBeaconsReached == 3){
 			distanceBetweenPoints= 140;
 		}
 		
 		if(distanceToGoal/8>distanceBetweenPoints+8.1){
 			intensity = 0;
-		}else 
+		}
+		if(distanceToGoal/8<distanceBetweenPoints+8.1){
 			inversDistanceToGoal = distanceBetweenPoints-(distanceToGoal/8);
 		intensity = (i*Math.pow(inversDistanceToGoal,2))/(Math.pow(distanceBetweenPoints,2));	
-		System.out.println(intensity);
+		//System.out.println(intensity);
+		}
 	}
 
 	public void calculateAngle(){
@@ -290,9 +293,10 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
     	   sock = new DatagramSocket();           
     	   InetAddress host = InetAddress.getByName("localhost");
 		           
-	        ByteBuffer i = ByteBuffer.allocate((int)intensity);
+	        ByteBuffer i = ByteBuffer.allocate((int)distanceToGoal); //intensity
 	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
 	        sock.send(dp);
+	        sock.close();
 	        //System.out.println((int) distanceToGoal);
        }         
        catch(IOException e)
