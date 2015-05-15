@@ -65,14 +65,14 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 			//If the game is not won, display game.
 			if(screen.isGoalReach == false){
 				g.fillRect(0,0,screenWidth,screenHeight);
-				g.drawImage(image2, xBackground-600, yBackground-600, backgroundWidth, backgroundHeight, null); //Background
+				g.drawImage(image2, xBackground-600, yBackground-600, backgroundWidth, backgroundHeight/4, null); //Background
 				//Beacons reached
 				g.setColor(Color.WHITE);
 				p.drawShip(g);
 				//Position the line and calculation point to the middle of the ship/player.
 				//USE THIS FOR 
-				p.playerPointX = p.xPlayer+p.playerWidth/2;
-				p.playerPointY = p.yPlayer+p.playerHeight/2;
+				p.playerPointX = p.xPlayer+(p.playerWidth/2);
+				p.playerPointY = p.yPlayer+(p.playerHeight/2);
 				//Display path only visible by key pressed A.
 				if(isVisible == true){
 					//Line to calculate the angle. Always pointing upwards.
@@ -238,7 +238,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		if(degree>90){
 			degree = (degree-180)*-1;
 		}
-		if(p.xPlayer+p.playerWidth/2 > d.goalPointX){ //player is right to the goal playerPointX, playerPointY
+		if(p.playerPointX > d.goalPointX){ //player is right to the goal playerPointX, playerPointY
 			degree = (degree)*-1;
 		}
 		//degree = (degree+90)/180;
