@@ -9,11 +9,6 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sound {
-	
-	public Sound(){
-		//Constructor calling methods so other classes can access them.
-		
-	}
 
 	public void beaconHit(){
 		try {

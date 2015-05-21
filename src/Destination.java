@@ -15,12 +15,8 @@ public class Destination {
 	public int counter = 0;
 	public int min = 0;
 	public int sec = 0;
-	Screens screen = new Screens();
 	Sound sound = new Sound();
 		
-	public static void main(String[] args) {
-
-	}
 	public void timer(){
 		if(counter>=100){
 			sec+=1;
@@ -67,5 +63,8 @@ public class Destination {
 			numberOfBeaconsReached +=1;
 			System.out.println(min + ":" + sec + ":" + counter); //Display time when reached.
 		}
+	}
+	public static void main(String[] args) {
+
 	}
 }

@@ -2,7 +2,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 
 
@@ -24,7 +23,6 @@ public class Screens {
 	private BufferedImage intro8;
 	private BufferedImage intro9;
 	private BufferedImage displayIntro;
-	
 	private BufferedImage end;
 
 	public Screens(){
@@ -39,7 +37,6 @@ public class Screens {
 		        intro7 = ImageIO.read(new File("src/7.png")); //Background
 		        intro8 = ImageIO.read(new File("src/8.png")); //Background
 		        intro9 = ImageIO.read(new File("src/9.png")); //Background
-		        
 		        end = ImageIO.read(new File("src/end.jpg")); //Background
 		
 	 } catch (IOException ex) {

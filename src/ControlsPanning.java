@@ -37,7 +37,6 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 	Player p = new Player();
 	Destination d = new Destination();
 	String s = ""; //No value = no sound, 10 highest
-	public double intensity;
 	public double distanceToGoal;
 	public double bLength;
 	public double cLength;
@@ -47,7 +46,6 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 	boolean isVisible = false;
 	
 	public int xBackground = 0, yBackground = 0, backgroundWidth = screenWidth*6, backgroundHeight = screenWidth*6, velX = 0, velY = 0; //Background
-	
 	public ControlsPanning()
 	{
 		tm.start(); //start timer
@@ -69,7 +67,6 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 		if(screen.isGameStarted == true){
 			//If the game is not won, display game.
 			if(screen.isGoalReach == false){
-				g.fillRect(0,0,screenWidth,screenHeight);
 				g.drawImage(image2, xBackground-600, yBackground-600, backgroundWidth, backgroundHeight/4, null); //Background
 				p.drawShip(g);
 				//Position the line and calculation point to the middle of the ship/player.
@@ -119,7 +116,6 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 		p.checkPosition();
 		repaint();
 		calculateDistanceTogoal();
-		calculateIntensity();
 		calcuteA();
 		calcuteC();
 		calculateAngle();
@@ -197,10 +193,6 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 		double y_a = (p.playerPointY-400)-d.goalPointY;
 		aLength = Math.sqrt(Math.pow(x_a,2) + Math.pow(y_a,2));
 	}
-	public void calculateIntensity(){
-		double p = 10000;
-		intensity = p/(4*Math.PI*(Math.pow((distanceToGoal-50)/8,2)));
-	}
 
 	public void calculateAngle(){
 		degree = Math.acos(angle)*(180/Math.PI);
@@ -216,7 +208,6 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 		}
 		//degree = (degree+90)/180;
 		degree = degree+90; //This gave the angle value from 0 to 1.
-		
 	}
 	public void sendToDacUDP(){
 		DatagramSocket sock = null;
@@ -225,9 +216,8 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
         {
             sock = new DatagramSocket(); 
             InetAddress host = InetAddress.getByName("localhost");
-           
-            if(d.numberOfBeaconsReached >=3){
-            		s = "11111";
+           if(d.numberOfBeaconsReached >=3){
+            		s = "1111";
             }
             byte[] b = s.getBytes();
             DatagramPacket  dp = new DatagramPacket(b , b.length , host , port);

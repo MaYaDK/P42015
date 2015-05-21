@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-
 public class Player {
 	public static int screenWidth = 1920, screenHeight = 1080-80;
 	//Player variables

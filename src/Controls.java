@@ -38,8 +38,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	boolean isVisible = false;
 	
 	public int xBackground = 0, yBackground = 0, backgroundWidth = screenWidth*6, backgroundHeight = screenWidth*6, velX = 0, velY = 0; //Background
-	double distanceBetweenPoints = 62.7;
-	double inversDistanceToGoal;
 	public Controls()
 	{
 		tm.start(); //start timer
@@ -61,7 +59,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		if(screen.isGameStarted == true){
 			//If the game is not won, display game.
 			if(screen.isGoalReach == false){
-				//g.fillRect(0,0,screenWidth,screenHeight);
 				g.drawImage(image2, xBackground-600, yBackground-600, backgroundWidth, backgroundHeight/4, null); //Background
 				p.drawShip(g);
 				//Position the line and calculation point to the middle of the ship/player.
@@ -97,7 +94,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		d.newBeaconY += 100;
 		System.out.println("GOAL reached");
 		System.out.println(d.min + ":" + d.sec + ":" + d.counter);
-		
 	}
 
 	public void actionPerformed(ActionEvent e){
@@ -112,14 +108,12 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		p.checkPosition();
 		repaint();
 		calculateDistanceTogoal();
-		calculateIntensity();
 		calcuteA();
 		calcuteC();
 		calculateAngle();
 		calculateDB();
 		sendToUDP();
 		sendToDacUDP();
-		sendToUDP_degree();
 	}
 	public void keyPressed(KeyEvent e){
 		int c = e.getKeyCode();
@@ -191,29 +185,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		double y_a = p.playerPointY-d.goalPointY;
 		aLength = Math.sqrt(Math.pow(x_a,2) + Math.pow(y_a,2));
 	}
-	public void calculateIntensity(){
-		double i = 70;
-		
-		if(d.numberOfBeaconsReached == 0){
-			distanceBetweenPoints= 62.7;
-		}else if(d.numberOfBeaconsReached == 1){
-			distanceBetweenPoints= 188;
-		}else if(d.numberOfBeaconsReached == 2){
-			//System.out.println(distanceToGoal/8);
-			distanceBetweenPoints= 131.4; //FIX THIS
-		}else if(d.numberOfBeaconsReached == 3){
-			distanceBetweenPoints= 140;
-		}
-		
-		if(distanceToGoal/8>distanceBetweenPoints+8.1){
-			intensity = 0;
-		}
-		if(distanceToGoal/8<distanceBetweenPoints+8.1){
-			inversDistanceToGoal = distanceBetweenPoints-(distanceToGoal/8);
-		intensity = (i*Math.pow(inversDistanceToGoal,2))/(Math.pow(distanceBetweenPoints,2));	
-		//System.out.println(intensity);
-		}
-	}
 
 	public void calculateAngle(){
 		degree = Math.acos(angle)*(180/Math.PI);
@@ -229,8 +200,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		}
 		//degree = (degree+90)/180;
 		degree = degree+90; //This gave the angle value from 0 to 1.
-		
-		//System.out.println(degree);
 	}
 	public void sendToDacUDP(){
 		DatagramSocket sock = null;
@@ -239,11 +208,8 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
         {
             sock = new DatagramSocket(); 
             InetAddress host = InetAddress.getByName("localhost");
-           
-            if(p.xPlayer > d.goalPointX){ //player is right to the goal
-            	if(d.numberOfBeaconsReached >=3){
+            if(d.numberOfBeaconsReached >=3){
         			s = "1111";
-            	}
             }
             byte[] b = s.getBytes();
             DatagramPacket  dp = new DatagramPacket(b , b.length , host , port);
@@ -274,23 +240,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
     	   System.err.println("IOException " + e);
        }
 	}
-	public void sendToUDP_degree(){
-		//UDP
-		int port = 2222;         
-		try
-        {
-			DatagramSocket socket = new DatagramSocket();           
-    	    InetAddress host = InetAddress.getByName("localhost");      
-	        ByteBuffer i = ByteBuffer.allocate((int)degree);
-	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
-	        socket.send(dp);
-	        socket.close();
-       }         
-       catch(IOException e)
-       {
-    	   System.err.println("IOException " + e);
-       }
-	}
 	
 	public void keyTyped(KeyEvent e){}
 	public void keyReleased(KeyEvent e){
@@ -311,4 +260,3 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		jf.add(t);
 	}
 }
-
