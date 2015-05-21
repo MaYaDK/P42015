@@ -27,8 +27,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	Screens screen = new Screens();
 	Player p = new Player();
 	Destination d = new Destination();
-	String s = ""; //No value = no sound, 10 highest
-	public double intensity;
+	String s = ""; 
 	public double distanceToGoal;
 	public double bLength;
 	public double cLength;
@@ -75,7 +74,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 					g.drawLine(d.goalPointX, d.goalPointY,p.playerPointX, p.playerPointY-400);
 					//bLine/Line distance to goal/
 					g.setColor(Color.RED);
-					g.drawLine(p.playerPointX, p.playerPointY,d.goalPointX,d.goalPointY); //could be used to measure distance from player to goal
+					g.drawLine(p.playerPointX, p.playerPointY,d.goalPointX,d.goalPointY); 
 				}
 			}
 			//If player has reached goal
@@ -103,8 +102,8 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		d.goalPointX = xBackground + 400 + d.newBeaconX;
 		d.goalPointY = yBackground + 400 + d.newBeaconY;
 		
-		xBackground = xBackground + velX; //xBackground if background should move. xPlayer if player should move
-		yBackground = yBackground + velY; //yBackground if background should move. yPlayer if player should move
+		xBackground = xBackground + velX; 
+		yBackground = yBackground + velY; 
 		p.checkPosition();
 		repaint();
 		calculateDistanceTogoal();
@@ -118,7 +117,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	public void keyPressed(KeyEvent e){
 		int c = e.getKeyCode();
 		//Player movement
-		if(c == KeyEvent.VK_LEFT){ //Moving player left
+		if(c == KeyEvent.VK_LEFT){
 			velX = 2;
 			velY = 0;
 			p.isLeft = true;
@@ -127,7 +126,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 			p.isUp = false;
 			p.isDown = false;
 		}
-		if(c == KeyEvent.VK_RIGHT){ //Moving player right
+		if(c == KeyEvent.VK_RIGHT){
 			velX = -2;
 			velY = 0;
 			p.isRight = true;
@@ -136,7 +135,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 			p.isUp = false;
 			p.isDown = false;
 		}
-		if(c == KeyEvent.VK_UP){ ////Moving line up.. if wanted to move player up: velX = 0; velY = -1;
+		if(c == KeyEvent.VK_UP){
 			velX = 0; 
 			velY = 2;
 			p.isUp = true;
@@ -145,7 +144,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 			p.isRight = false;
 			p.isDown = false;
 		}
-		if(c == KeyEvent.VK_DOWN){ ////Moving line down. if wanted to move player up: velX = 0; velY = 1;
+		if(c == KeyEvent.VK_DOWN){
 			velX = 0; 
 			velY = -2;
 			p.isDown = true;
@@ -156,7 +155,7 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 			
 		}
 		//ON/OFF show path
-		if(c == KeyEvent.VK_ENTER){ ////Moving line down. if wanted to move player up: velX = 0; velY = 1;
+		if(c == KeyEvent.VK_ENTER){
 			isVisible = true;
 		}
 		if(c == KeyEvent.VK_SPACE){
