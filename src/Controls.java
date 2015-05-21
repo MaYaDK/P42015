@@ -30,10 +30,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	String s = ""; 
 	public double distanceToGoal;
 	public double bLength;
-	public double cLength;
-	public double aLength;
-	public double angle;
-	public double degree;
 	boolean isVisible = false;
 	
 	public int xBackground = 0, yBackground = 0, backgroundWidth = screenWidth*6, backgroundHeight = screenWidth*6, velX = 0, velY = 0; //Background
@@ -107,10 +103,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		p.checkPosition();
 		repaint();
 		calculateDistanceTogoal();
-		calcuteA();
-		calcuteC();
-		calculateAngle();
-		calculateDB();
 		sendToUDP();
 		sendToDacUDP();
 	}
@@ -172,33 +164,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		double y_b = p.playerPointY-d.goalPointY;
 		distanceToGoal = Math.sqrt(Math.pow(x_b,2) + Math.pow(y_b,2));
 		bLength = distanceToGoal;
-	}
-	public void calcuteC(){
-		double x_c = p.playerPointX-p.playerPointX;
-		double y_c = p.playerPointY-p.playerPointY-400;
-		cLength = Math.sqrt(Math.pow(x_c,2) + Math.pow(y_c,2));
-	}
-	
-	public void calcuteA(){
-		double x_a = p.playerPointX-d.goalPointX;
-		double y_a = p.playerPointY-d.goalPointY;
-		aLength = Math.sqrt(Math.pow(x_a,2) + Math.pow(y_a,2));
-	}
-
-	public void calculateAngle(){
-		degree = Math.acos(angle)*(180/Math.PI);
-		angle = ((Math.pow(bLength,2) + Math.pow(cLength,2)-Math.pow(aLength,2))/(2*bLength*cLength));
-	}
-	public void calculateDB(){
-		
-		if(degree>90){
-			degree = (degree-180)*-1;
-		}
-		if(p.playerPointX > d.goalPointX){ //player is right to the goal playerPointX, playerPointY
-			degree = (degree)*-1;
-		}
-		//degree = (degree+90)/180;
-		degree = degree+90; //This gave the angle value from 0 to 1.
 	}
 	public void sendToDacUDP(){
 		DatagramSocket sock = null;
