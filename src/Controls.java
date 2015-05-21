@@ -28,16 +28,13 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	Player p = new Player();
 	Destination d = new Destination();
 	String s = ""; //No value = no sound, 10 highest
-	String s2 = "";
 	public double intensity;
-	
 	public double distanceToGoal;
 	public double bLength;
 	public double cLength;
 	public double aLength;
 	public double angle;
 	public double degree;
-	public double dB;
 	boolean isVisible = false;
 	
 	public int xBackground = 0, yBackground = 0, backgroundWidth = screenWidth*6, backgroundHeight = screenWidth*6, velX = 0, velY = 0; //Background
@@ -64,13 +61,10 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		if(screen.isGameStarted == true){
 			//If the game is not won, display game.
 			if(screen.isGoalReach == false){
-				g.fillRect(0,0,screenWidth,screenHeight);
+				//g.fillRect(0,0,screenWidth,screenHeight);
 				g.drawImage(image2, xBackground-600, yBackground-600, backgroundWidth, backgroundHeight/4, null); //Background
-				//Beacons reached
-				g.setColor(Color.WHITE);
 				p.drawShip(g);
 				//Position the line and calculation point to the middle of the ship/player.
-				//USE THIS FOR 
 				p.playerPointX = p.xPlayer+(p.playerWidth/2);
 				p.playerPointY = p.yPlayer+(p.playerHeight/2);
 				//Display path only visible by key pressed A.
@@ -89,7 +83,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 			}
 			//If player has reached goal
 			if(d.goalPointX > p.playerPointX-50 && d.goalPointX < p.playerPointX+50 && d.goalPointY > p.playerPointY-50 && d.goalPointY < p.yPlayer+p.playerPointY+50){
-				//System.out.println(distanceToGoal/8);
 				if(d.numberOfBeaconsReached == 3){
 					destinationReached();
 				}else
@@ -110,8 +103,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	public void actionPerformed(ActionEvent e){
 		if(screen.isGameStarted == true){
 			d.timer();
-			//Debug
-			//System.out.println("Timer:"+ d.min + ":" + d.sec + ":" + d.counter); //Display time when reached.
 		}
 		d.goalPointX = xBackground + 400 + d.newBeaconX;
 		d.goalPointY = yBackground + 400 + d.newBeaconY;
@@ -130,8 +121,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		sendToDacUDP();
 		sendToUDP_degree();
 	}
-	
-	
 	public void keyPressed(KeyEvent e){
 		int c = e.getKeyCode();
 		//Player movement
@@ -190,10 +179,8 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		double y_b = p.playerPointY-d.goalPointY;
 		distanceToGoal = Math.sqrt(Math.pow(x_b,2) + Math.pow(y_b,2));
 		bLength = distanceToGoal;
-		//System.out.println(distanceToGoal); //debug
 	}
 	public void calcuteC(){
-		//p.playerPointX, p.playerPointY, p.playerPointX, p.playerPointY-1000)
 		double x_c = p.playerPointX-p.playerPointX;
 		double y_c = p.playerPointY-p.playerPointY-400;
 		cLength = Math.sqrt(Math.pow(x_c,2) + Math.pow(y_c,2));
@@ -231,7 +218,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	public void calculateAngle(){
 		degree = Math.acos(angle)*(180/Math.PI);
 		angle = ((Math.pow(bLength,2) + Math.pow(cLength,2)-Math.pow(aLength,2))/(2*bLength*cLength));
-		//System.out.println("Degree"+degree);
 	}
 	public void calculateDB(){
 		
@@ -256,24 +242,10 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
            
             if(p.xPlayer > d.goalPointX){ //player is right to the goal
             	if(d.numberOfBeaconsReached >=3){
-        			s2 = "1111";
-            	}else 
-            	s2 = "1";  //send one byte
+        			s = "1111";
+            	}
             }
-            if(p.xPlayer < d.goalPointX){ //player is left to the goal
-            	if(d.numberOfBeaconsReached >=3){
-            		s2 = "11111";
-            	}else
-            	
-            	s2 = "11";  //send two byte
-            }
-            if(d.goalPointX > p.xPlayer && d.goalPointX < p.xPlayer+p.playerWidth){ //player equal to goal
-            	if(d.numberOfBeaconsReached >=3){
-            	s2 = "111111";
-        	}else
-            	s2 = "111";  //send three byte
-            }
-            byte[] b = s2.getBytes();
+            byte[] b = s.getBytes();
             DatagramPacket  dp = new DatagramPacket(b , b.length , host , port);
             sock.send(dp);
             sock.close();
@@ -291,21 +263,17 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		try
         {
     	   sock = new DatagramSocket();           
-    	   InetAddress host = InetAddress.getByName("localhost");
-		           
+    	   InetAddress host = InetAddress.getByName("localhost");       
 	        ByteBuffer i = ByteBuffer.allocate((int)distanceToGoal); //intensity
 	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
 	        sock.send(dp);
 	        sock.close();
-	        //System.out.println((int) distanceToGoal);
        }         
        catch(IOException e)
        {
     	   System.err.println("IOException " + e);
        }
 	}
-	
-	
 	public void sendToUDP_degree(){
 		//UDP
 		int port = 2222;         
@@ -317,7 +285,6 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
 	        socket.send(dp);
 	        socket.close();
-	       // System.out.println((int) distanceToGoal);
        }         
        catch(IOException e)
        {

@@ -42,24 +42,15 @@ public class Player {
 	}
 	public void checkPosition(){
 		if(isLeft == true){
-			//Have to resize picture by swithing the width and height.
-			//playerWidth = 800; 
-			//playerHeight = 600;
 			shipDisplay = shipLeft;
 		}
 		if(isRight == true){
-			//playerWidth = 800; 
-			//playerHeight = 600;
 			shipDisplay = shipRight;
 		}
 		if(isUp == true){
-			//playerWidth = 600; 
-			//playerHeight = 800;
 			shipDisplay = ship;
 		}
 		if(isDown == true){
-			//playerWidth = 600; 
-			//playerHeight = 800;
 			shipDisplay = shipDown;
 		}	
 	}

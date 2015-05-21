@@ -37,16 +37,13 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 	Player p = new Player();
 	Destination d = new Destination();
 	String s = ""; //No value = no sound, 10 highest
-	String s2 = "";
 	public double intensity;
-	
 	public double distanceToGoal;
 	public double bLength;
 	public double cLength;
 	public double aLength;
 	public double angle;
 	public double degree;
-	public double dB;
 	boolean isVisible = false;
 	
 	public int xBackground = 0, yBackground = 0, backgroundWidth = screenWidth*6, backgroundHeight = screenWidth*6, velX = 0, velY = 0; //Background
@@ -74,8 +71,6 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 			if(screen.isGoalReach == false){
 				g.fillRect(0,0,screenWidth,screenHeight);
 				g.drawImage(image2, xBackground-600, yBackground-600, backgroundWidth, backgroundHeight/4, null); //Background
-				//Beacons reached
-				g.setColor(Color.WHITE);
 				p.drawShip(g);
 				//Position the line and calculation point to the middle of the ship/player.
 				p.playerPointX = p.xPlayer+p.playerWidth/2;
@@ -110,14 +105,11 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 		d.newBeaconY += 100;
 		System.out.println("GOAL reached");
 		System.out.println(d.min + ":" + d.sec + ":" + d.counter);
-		
 	}
 
 	public void actionPerformed(ActionEvent e){
 		if(screen.isGameStarted == true){
 			d.timer();
-			//Debug
-			//System.out.println("Timer:"+ d.min + ":" + d.sec + ":" + d.counter); //Display time when reached.
 		}
 		d.goalPointX = xBackground + 400 + d.newBeaconX;
 		d.goalPointY = yBackground + 400 + d.newBeaconY;
@@ -132,10 +124,8 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 		calcuteC();
 		calculateAngle();
 		calculateDB();
-		//sendToUDP();
 		sendToDacUDP();
 		sendToUDP_degree();
-		//System.out.println(""+distanceToGoal);
 	}
 	
 	
@@ -191,16 +181,12 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 	///////////////////////////////////UDP
 	
 	public void calculateDistanceTogoal(){
-		//Take current length of line and substitute with prev. 
-		//If longer decrease. else if shorter increase 
 		double x_b = p.playerPointX-d.goalPointX;
 		double y_b = p.playerPointY-d.goalPointY;
 		distanceToGoal = Math.sqrt(Math.pow(x_b,2) + Math.pow(y_b,2));
 		bLength = distanceToGoal;
-		//System.out.println(distanceToGoal); //debug
 	}
 	public void calcuteC(){
-		//p.playerPointX, p.playerPointY, p.playerPointX, p.playerPointY-1000)
 		double x_c = p.playerPointX-p.playerPointX;
 		double y_c = p.playerPointY-p.playerPointY-400;
 		cLength = Math.sqrt(Math.pow(x_c,2) + Math.pow(y_c,2));
@@ -212,22 +198,13 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 		aLength = Math.sqrt(Math.pow(x_a,2) + Math.pow(y_a,2));
 	}
 	public void calculateIntensity(){
-		//intensity = 1/Math.pow(distanceToGoal,2);
-		//System.out.println(""+intensity);
-		//intensity = (70*Math.pow(distanceToGoal/8, 2))/Math.pow(283, 2);
-		
-		
-		//= P/(4*pi*d^2)
-				double p = 10000;
+		double p = 10000;
 		intensity = p/(4*Math.PI*(Math.pow((distanceToGoal-50)/8,2)));
-		//System.out.println(distanceToGoal);
-		//System.out.println("dB"+ intensity);
 	}
 
 	public void calculateAngle(){
 		degree = Math.acos(angle)*(180/Math.PI);
 		angle = ((Math.pow(bLength,2) + Math.pow(cLength,2)-Math.pow(aLength,2))/(2*bLength*cLength));
-		//System.out.println("Degree"+degree);
 	}
 	public void calculateDB(){
 		
@@ -240,7 +217,6 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 		//degree = (degree+90)/180;
 		degree = degree+90; //This gave the angle value from 0 to 1.
 		
-		//System.out.println(degree);
 	}
 	public void sendToDacUDP(){
 		DatagramSocket sock = null;
@@ -250,26 +226,10 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
             sock = new DatagramSocket(); 
             InetAddress host = InetAddress.getByName("localhost");
            
-            if(p.xPlayer > d.goalPointX){ //player is right to the goal
-            	if(d.numberOfBeaconsReached >=3){
-        			s2 = "1111";
-            	}else 
-            	s2 = "1";  //send one byte
+            if(d.numberOfBeaconsReached >=3){
+            		s = "11111";
             }
-            if(p.xPlayer < d.goalPointX){ //player is left to the goal
-            	if(d.numberOfBeaconsReached >=3){
-            		s2 = "11111";
-            	}else
-            	
-            	s2 = "11";  //send two byte
-            }
-            if(d.goalPointX > p.xPlayer && d.goalPointX < p.xPlayer+p.playerWidth){ //player equal to goal
-            	if(d.numberOfBeaconsReached >=3){
-            	s2 = "111111";
-        	}else
-            	s2 = "111";  //send three byte
-            }
-            byte[] b = s2.getBytes();
+            byte[] b = s.getBytes();
             DatagramPacket  dp = new DatagramPacket(b , b.length , host , port);
             sock.send(dp);
             sock.close();
@@ -279,27 +239,6 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
             System.err.println("IOException " + e);
         }
 	}
-	/*
-	public void sendToUDP(){
-		//UDP
-		DatagramSocket sock = null;
-		int port = 1111;         
-		try
-        {
-    	   sock = new DatagramSocket();           
-    	   InetAddress host = InetAddress.getByName("localhost");
-		           
-	        ByteBuffer i = ByteBuffer.allocate((int)distanceToGoal);
-	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
-	        sock.send(dp);
-	        //System.out.println((int) distanceToGoal);
-       }         
-       catch(IOException e)
-       {
-    	   System.err.println("IOException " + e);
-       }
-	}
-	*/
 	
 	public void sendToUDP_degree(){
 		//UDP
@@ -312,7 +251,6 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 	        DatagramPacket  dp = new DatagramPacket(i.array(), i.array().length, host , port);
 	        socket.send(dp);
 	        socket.close();
-	       // System.out.println((int) distanceToGoal);
        }         
        catch(IOException e)
        {
