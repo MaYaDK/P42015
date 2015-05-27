@@ -20,7 +20,8 @@ import java.net.*;
 import java.nio.ByteBuffer;
 
 public class Controls extends JPanel implements ActionListener, KeyListener{
-	private BufferedImage image2; //BackGround
+	private BufferedImage water; //BackGround
+	private BufferedImage mist;
 	
 	public static int screenWidth = 1920, screenHeight = 1080-80;
 	Timer tm = new Timer(5, this);
@@ -40,7 +41,8 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		setFocusable(true);
 		setFocusTraversalKeysEnabled(false); //Wont be using shift, tab.. keys
 		try {
-	        image2 = ImageIO.read(new File("src/WaterThirdVersion.jpg")); //Background
+	        water = ImageIO.read(new File("src/WaterThirdVersion.jpg")); //Background
+	        mist = ImageIO.read(new File("src/Mist3.png"));
 	          
 	    } catch (IOException ex) {
 	            // handle exception...
@@ -54,8 +56,10 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		if(screen.isGameStarted == true){
 			//If the game is not won, display game.
 			if(screen.isGoalReach == false){
-				g.drawImage(image2, xBackground-600, yBackground-600, backgroundWidth, backgroundHeight/4, null); //Background
+				g.drawImage(water, xBackground-600, yBackground-600, backgroundWidth, backgroundHeight/4, null); //Background
+				
 				p.drawShip(g);
+				g.drawImage(mist, 0,0, 1920, 1200, null); //Background
 				//Position the line and calculation point to the middle of the ship/player.
 				p.playerPointX = p.xPlayer+(p.playerWidth/2);
 				p.playerPointY = p.yPlayer+(p.playerHeight/2);

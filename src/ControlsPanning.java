@@ -21,7 +21,8 @@ import java.net.*;
 import java.nio.ByteBuffer;
 
 public class ControlsPanning extends JPanel implements ActionListener, KeyListener{
-	private BufferedImage image2; //BackGround
+	private BufferedImage water; //BackGround
+	private BufferedImage mist; 
 	
 	public static int screenWidth = 1920, screenHeight = 1080-80;
 	Timer tm = new Timer(5, this);
@@ -45,8 +46,8 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 		setFocusable(true);
 		setFocusTraversalKeysEnabled(false); //Wont be using shift, tab.. keys
 		try {
-	        image2 = ImageIO.read(new File("src/WaterThirdVersion.jpg")); //Background
-	          
+			water = ImageIO.read(new File("src/WaterThirdVersion.jpg")); //Background
+	        mist = ImageIO.read(new File("src/Mist3.png")); 
 	    } catch (IOException ex) {
 	            // handle exception...
 	       }
@@ -59,8 +60,9 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 		if(screen.isGameStarted == true){
 			//If the game is not won, display game.
 			if(screen.isGoalReach == false){
-				g.drawImage(image2, xBackground-600, yBackground-600, backgroundWidth, backgroundHeight/4, null); //Background
+				g.drawImage(water, xBackground-600, yBackground-600, backgroundWidth, backgroundHeight/4, null); //Background
 				p.drawShip(g);
+				g.drawImage(mist, 0,0, 1920, 1200, null); //Background
 				//Position the line and calculation point to the middle of the ship/player.
 				p.playerPointX = p.xPlayer+p.playerWidth/2;
 				p.playerPointY = p.yPlayer+p.playerHeight/2;
@@ -108,8 +110,8 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 		p.checkPosition();
 		repaint();
 		calculateDistanceTogoal();
-		calcuteA();
-		calcuteC();
+		calculateA();
+		calculateC();
 		calculateAngle();
 		calculateDB();
 		sendToDacUDP();
@@ -174,13 +176,13 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 		distanceToGoal = Math.sqrt(Math.pow(x_b,2) + Math.pow(y_b,2));
 		bLength = distanceToGoal;
 	}
-	public void calcuteC(){
+	public void calculateC(){
 		double x_c = p.playerPointX-p.playerPointX;
 		double y_c = p.playerPointY-p.playerPointY-400;
 		cLength = Math.sqrt(Math.pow(x_c,2) + Math.pow(y_c,2));
 	}
 	
-	public void calcuteA(){
+	public void calculateA(){
 		double x_a = p.playerPointX-d.goalPointX;
 		double y_a = (p.playerPointY-400)-d.goalPointY;
 		aLength = Math.sqrt(Math.pow(x_a,2) + Math.pow(y_a,2));
