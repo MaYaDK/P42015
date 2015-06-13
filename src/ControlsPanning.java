@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 public class ControlsPanning extends JPanel implements ActionListener, KeyListener{
 	private BufferedImage water; //BackGround
 	private BufferedImage mist; 
+	private BufferedImage sand;
 	
 	public static int screenWidth = 1920, screenHeight = 1080-80;
 	Timer tm = new Timer(5, this);
@@ -48,6 +49,7 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 		try {
 			water = ImageIO.read(new File("src/WaterThirdVersion.jpg")); //Background
 	        mist = ImageIO.read(new File("src/Mist3.png")); 
+	        sand = ImageIO.read(new File("src/texture_sand.jpg")); //Background
 	    } catch (IOException ex) {
 	            // handle exception...
 	       }
@@ -60,6 +62,7 @@ public class ControlsPanning extends JPanel implements ActionListener, KeyListen
 		if(screen.isGameStarted == true){
 			//If the game is not won, display game.
 			if(screen.isGoalReach == false){
+				g.drawImage(sand, 0, 0, screenWidth, screenHeight, null);
 				g.drawImage(water, xBackground-600, yBackground-600, backgroundWidth, backgroundHeight/4, null); //Background
 				p.drawShip(g);
 				g.drawImage(mist, 0,0, 1920, 1200, null); //Background

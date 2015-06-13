@@ -40,14 +40,13 @@ public class Screens {
 		        intro8 = ImageIO.read(new File("src/8.png")); //Background
 		        intro9 = ImageIO.read(new File("src/9.png")); //Background
 		        end = ImageIO.read(new File("src/end.jpg")); //Background
-		
-	 } catch (IOException ex) {
+		        	
+	} catch (IOException ex) {
          // handle exception...
     }
 		displayIntro = intro1;
 	}
 	public void checker(Graphics g){
-		
 		Font font = new Font("Monospaced", Font.BOLD, 35); //Create new font.
 		g.setFont(font); //Passing the created font.
 		g.drawString("Use arrow keys to move ship", 0,25);
@@ -79,9 +78,7 @@ public class Screens {
 			displayIntro = intro9;
 		}
 		if(i ==9){
-			
 			isGameStarted = true;
-			
 		}
 		g.drawImage(displayIntro, 0, 0, screenWidth, screenHeight, null);
 		g.drawString("Next scene, press SPACE", 0,25);
