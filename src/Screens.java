@@ -1,7 +1,9 @@
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 
 
@@ -45,8 +47,11 @@ public class Screens {
 		displayIntro = intro1;
 	}
 	public void checker(Graphics g){
-	if(isGameStarted == false){
 		
+		Font font = new Font("Monospaced", Font.BOLD, 35); //Create new font.
+		g.setFont(font); //Passing the created font.
+		g.drawString("Use arrow keys to move ship", 0,25);
+	if(isGameStarted == false){
 		//Display picture.
 		//Change picture for each press of SPACE
 		if(i ==1){
@@ -74,12 +79,15 @@ public class Screens {
 			displayIntro = intro9;
 		}
 		if(i ==9){
+			
 			isGameStarted = true;
+			
 		}
-		g.drawImage(displayIntro, 0, 0, screenWidth, screenHeight, null); //Player
+		g.drawImage(displayIntro, 0, 0, screenWidth, screenHeight, null);
+		g.drawString("Next scene, press SPACE", 0,25);
 	}
 	if(isGoalReach == true){
-		g.drawImage(end, 0, 0, screenWidth, screenHeight, null); //Player
+		g.drawImage(end, 0, 0, screenWidth, screenHeight, null);
 		}
 	}
 	
