@@ -101,9 +101,27 @@ public class Controls extends JPanel implements ActionListener, KeyListener{
 		}
 		d.goalPointX = xBackground + 400 + d.newBeaconX;
 		d.goalPointY = yBackground + 400 + d.newBeaconY;
-		
-		xBackground = xBackground + velX; 
-		yBackground = yBackground + velY; 
+		//Boundaries
+		if(xBackground <=1164){
+			xBackground = xBackground + velX; 
+		}else {
+			xBackground-=10;
+		}
+		if(xBackground >= -9764){
+			xBackground = xBackground + velX; 
+		}else {
+				xBackground+=10;
+		}
+		if(yBackground <=806){ //1286
+			yBackground = yBackground + velY; 
+		}else {
+			yBackground-=10;
+		}
+		if(yBackground >= -1286){ //1286
+			yBackground = yBackground + velY; 
+		}else {
+			yBackground+=10;
+		}
 		p.checkPosition();
 		repaint();
 		calculateDistanceTogoal();
